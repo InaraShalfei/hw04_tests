@@ -3,7 +3,9 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model
 
 from posts.models import Post, Group
+from posts.forms import PostForm
 
+User = get_user_model()
 
 class NewPostFormTest(TestCase):
     @classmethod
@@ -15,6 +17,8 @@ class NewPostFormTest(TestCase):
             slug='test-slug',
             description='Gruppa chtoby govorit privet',
         )
+
+
 
     def setUp(self):
         self.user = get_user_model().objects.create_user(username='Mike')
@@ -32,3 +36,24 @@ class NewPostFormTest(TestCase):
         )
         self.assertRedirects(response, '/')
         self.assertEqual(Post.objects.count(), posts_count + 1)
+
+    def test_post_edit_form_create(self):
+        post = Post.objects.create(
+            author=self.user,
+            text='Старый текст.',
+            group=NewPostFormTest.group,
+        )
+        posts_count = Post.objects.count()
+        data = {'group': NewPostFormTest.group.id,
+                'text': 'Новый текст'}
+        response = self.authorized_client.post(
+            reverse('post_edit', kwargs={"username": self.user.username, "post_id":post.id}),
+            data=data,
+            follow=True
+        )
+        changed_post = Post.objects.get(id=post.id)
+        self.assertRedirects(response, f'/{self.user.username}/')
+        self.assertEqual(changed_post.text, 'Новый текст')
+        self.assertEqual(Post.objects.count(), posts_count)
+
+
