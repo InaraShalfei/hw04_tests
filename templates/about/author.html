@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Об авторе проекта{% endblock %}
+{% block header %}Об авторе проекта{% endblock %}
+{% block content %}
+{% load user_filters %}
+  <main role="main" class="container">
+    <div class="row">
+      <!-- Левый вспомогательный блок -->
+      <div class="col-md-3 mb-3 mt-1">
+        <div class="card">
+          <div class="card-body">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">
+                <div class="h3">
+                  Об авторе
+                </div> 
+              </li>
+              <li class="list-group-item">
+                <div> <img src="/static/author_photo.jpg" class="img-fluid"></div>
+                <div class="h6 text-muted">
+                  Hey everyone! My name is Inara, and I am an English and Russian online teacher!
+                </div>
+              </li>
+            </ul>                                               
+          </div>                    
+        </div>                
+      </div>
+      <!-- Тело страницы -->
+      <div class="col-md-9">
+        <div class="card-body">                    
+          <div class="card-text">
+            <p>Hey everyone! My name is Inara, and I am an English and Russian online teacher!
+I have been working as an online teacher for more than three years. And I can admit that I really enjoy my job, because it involves communicating with new people. Being an English teacher is challenging and inspiring at the same time, and let me develop every day. </p>
+          </div>                    
+        </div>                
+      </div>            
+    </div>        
+  </main>
+{% endblock %} 

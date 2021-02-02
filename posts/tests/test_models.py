@@ -1,0 +1,88 @@
+from django.test import TestCase
+from posts.models import Group, Post
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
+
+class PostModelTest(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        Post.objects.create(
+            author=User.objects.create_user('Mike', 'admin@test.com', 'pass'),
+            text='Тестовый текст, превышающий пятнадцать символов на любом языке.',
+            group=Group.objects.create(title='Bash', slug='bash/', description='bash group'),
+        )
+        user = User.objects.get(username='Mike')
+
+        cls.post = Post.objects.get(author=user)
+
+    def test_verbose_name(self):
+        post = PostModelTest.post
+        field_verboses = {
+            'text': 'Текст поста',
+            'author': 'Автор поста',
+            'group': 'Группа поста',
+        }
+        for value, expected in field_verboses.items():
+            with self.subTest(value=value):
+                self.assertEqual(
+                    post._meta.get_field(value).verbose_name, expected)
+
+    def test_help_text(self):
+        post = PostModelTest.post
+        field_help_texts = {
+            'text': 'Написать текст поста',
+            'author': 'Указать автора поста',
+            'group': 'Выбрать группу поста',
+        }
+        for value, expected in field_help_texts.items():
+            with self.subTest(value=value):
+                self.assertEqual(
+                    post._meta.get_field(value).help_text, expected)
+
+    def test_text_max_length_not_exceed(self):
+        post = PostModelTest.post
+        max_length_text = post.text[:15]
+        self.assertEqual(max_length_text, str(post))
+
+
+class GroupModelTest(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        Group.objects.create(
+            title='Vsem privet',
+            slug='vsem-privet',
+            description='Gruppa chtoby govorit privet',
+        )
+        cls.group = Group.objects.get(slug='vsem-privet')
+
+    def test_verbose_name(self):
+        group = GroupModelTest.group
+        field_verboses = {
+            'description': 'Описание группы',
+            'slug': 'Адрес группы',
+            'title': 'Название группы',
+        }
+        for value, expected in field_verboses.items():
+            with self.subTest(value=value):
+                self.assertEqual(
+                    group._meta.get_field(value).verbose_name, expected)
+
+    def test_help_text(self):
+        group = GroupModelTest.group
+        field_help_texts = {
+            'description': 'Дать описание группе',
+            'slug': 'Указать адрес для страницы',
+            'title': 'Дать название группе',
+        }
+        for value, expected in field_help_texts.items():
+            with self.subTest(value=value):
+                self.assertEqual(group._meta.get_field(value).help_text, expected)
+
+    def group_str_method(self):
+        group = GroupModelTest.group
+        expected_name = group.__str__()
+        self.assertEqual(expected_name, str(group))
