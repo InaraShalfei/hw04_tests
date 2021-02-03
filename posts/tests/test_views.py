@@ -151,12 +151,3 @@ class PostPagesTests(TestCase):
         self.assertEqual(response.context.get('username'), username)
         self.assertEqual(response.context.get('post').id, post.id)
         self.assertIsInstance(response.context.get('form'), PostForm)
-
-
-
-
-
-
-
-
-
