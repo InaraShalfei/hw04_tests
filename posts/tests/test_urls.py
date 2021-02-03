@@ -85,12 +85,21 @@ class PostUrlTests(TestCase):
         response = self.authorized_client.get(f'/{username}wrong/{post_id}/')
         self.assertEqual(response.status_code, 404)
 
-    def test_post_edit_404_for_anonymous(self):
+    def test_post_edit_redirect_for_anonymous(self):
         post = PostUrlTests.post
         post_id = post.id
         username = post.author.username
         response = self.guest_client.get(f'/{username}/{post_id}/edit/')
         self.assertRedirects(response, f'/{username}/{post_id}/')
+
+    def test_post_edit_redirect_for_authorized_user(self):
+        post = PostUrlTests.post
+        post_id = post.id
+        username = post.author.username
+        response = self.authorized_client.get(f'/{username}/{post_id}/edit/')
+        self.assertRedirects(response, f'/{username}/{post_id}/')
+
+
 
 
 
