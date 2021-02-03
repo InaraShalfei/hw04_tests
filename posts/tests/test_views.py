@@ -28,7 +28,7 @@ class PostPagesTests(TestCase):
         )
         cls.user = User.objects.create_user('Dike', 'admin@test.com', 'pass')
         for i in range(15):
-            Post.objects.create(
+            cls.post = Post.objects.create(
                 author=cls.user,
                 text=f'Текст{i}',
                 group=cls.group,
@@ -114,3 +114,26 @@ class PostPagesTests(TestCase):
         page = response_group_2.context.get('page')
         group_all_posts_2 = page.object_list
         self.assertNotIn(post, group_all_posts_2)
+
+    def test_profile_page_context(self):
+        post = PostPagesTests.post
+        user = post.author
+        response = self.authorized_client.get(reverse('profile', kwargs={'username': user}))
+        self.assertEqual(response.context.get('username'), user)
+        self.assertEqual(response.context.get('paginator').count, 15)
+
+
+    def test_profile_first_page_has_10_records(self):
+        post = PostPagesTests.post
+        user = post.author
+        response = self.authorized_client.get(reverse('profile', kwargs={'username': user}))
+        self.assertEqual(len(response.context.get('page').object_list), 10)
+
+
+
+
+
+
+
+
+
