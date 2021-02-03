@@ -107,3 +107,14 @@ class PostUrlTests(TestCase):
         author_client.force_login(post.author)
         response = author_client.get(f'/{username}/{post_id}/edit/')
         self.assertEqual(response.status_code, 200)
+
+    def test_urls_uses_correct_template_for_post_edit(self):
+        post = PostUrlTests.post
+        post_id = post.id
+        username = post.author.username
+        author_client = Client()
+        author_client.force_login(post.author)
+        template = 'new.html'
+        reverse_name = f'/{username}/{post_id}/edit/'
+        response = author_client.get(reverse_name)
+        self.assertTemplateUsed(response, template)
