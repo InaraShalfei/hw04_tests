@@ -32,7 +32,7 @@ def profile(request, username):
     paginator = Paginator(posts, 10)
     page_number = request.GET.get("page")
     page = paginator.get_page(page_number)
-    return render(request, "profile.html", {"username": user, "posts": posts, "page": page, "paginator": paginator})
+    return render(request, "profile.html", {"username": user, "page": page, "paginator": paginator})
 
 
 def post_view(request, username, post_id):
