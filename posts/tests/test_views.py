@@ -137,6 +137,20 @@ class PostPagesTests(TestCase):
         self.assertEqual(response.context.get('post').id, post.id)
         self.assertEqual(response.context.get('posts_count'), 15)
 
+    def test_post_edit_page_context(self):
+        post = Post.objects.create(
+            author=self.user,
+            text='New post',
+            group=PostPagesTests.group,
+        )
+        username = post.author.username
+        author_client = Client()
+        author_client.force_login(post.author)
+        post_id = post.id
+        response = author_client.get(reverse('post_edit', kwargs={'username': username, 'post_id': post_id}))
+        self.assertEqual(response.context.get('username'), username)
+        self.assertEqual(response.context.get('post').id, post.id)
+        self.assertIsInstance(response.context.get('form'), PostForm)
 
 
 
