@@ -3,9 +3,9 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model
 
 from posts.models import Post, Group
-from posts.forms import PostForm
 
 User = get_user_model()
+
 
 class NewPostFormTest(TestCase):
     @classmethod
@@ -17,8 +17,6 @@ class NewPostFormTest(TestCase):
             slug='test-slug',
             description='Gruppa chtoby govorit privet',
         )
-
-
 
     def setUp(self):
         self.user = get_user_model().objects.create_user(username='Mike')
@@ -47,7 +45,7 @@ class NewPostFormTest(TestCase):
         data = {'group': NewPostFormTest.group.id,
                 'text': 'Новый текст'}
         response = self.authorized_client.post(
-            reverse('post_edit', kwargs={"username": self.user.username, "post_id":post.id}),
+            reverse('post_edit', kwargs={"username": self.user.username, "post_id": post.id}),
             data=data,
             follow=True
         )

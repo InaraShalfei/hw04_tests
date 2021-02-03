@@ -80,7 +80,7 @@ class PostPagesTests(TestCase):
         self.assertEqual(len(response.context.get('page').object_list), 10)
 
     def test_homepage_second_page_has_5_records(self):
-        response = self.authorized_client.get(reverse('index')+'?page=2')
+        response = self.authorized_client.get(reverse('index') + '?page=2')
         self.assertEqual(len(response.context.get('page').object_list), 5)
 
     def test_group_page_context(self):

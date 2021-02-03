@@ -21,8 +21,3 @@ class StaticViewsTests(TestCase):
     def test_about_tech_page_uses_correct_template(self):
         response = self.guest_client.get(reverse('about:tech'))
         self.assertTemplateUsed(response, 'about/tech.html')
-
-
-
-
-

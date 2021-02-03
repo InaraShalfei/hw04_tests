@@ -29,10 +29,10 @@ class PostUrlTests(TestCase):
             description='Gruppa chtoby govorit privet',
         )
         cls.post = Post.objects.create(
-           author=User.objects.create_user('Mike', 'admin@test.com', 'pass'),
-           text='Тестовый текст, превышающий пятнадцать символов на любом языке.',
-           group=cls.group,
-            )
+            author=User.objects.create_user('Mike', 'admin@test.com', 'pass'),
+            text='Тестовый текст, превышающий пятнадцать символов на любом языке.',
+            group=cls.group,
+        )
 
     def setUp(self):
         self.guest_client = Client()
