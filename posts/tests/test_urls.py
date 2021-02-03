@@ -1,7 +1,9 @@
 from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
 
-from posts.models import Group
+from posts.models import Group, Post
+
+User = get_user_model()
 
 
 class HomepageURLTests(TestCase):
@@ -21,15 +23,20 @@ class PostUrlTests(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        Group.objects.create(
+        cls.group = Group.objects.create(
             title='Vsem privet',
             slug='test-slug',
             description='Gruppa chtoby govorit privet',
         )
+        cls.post = Post.objects.create(
+           author=User.objects.create_user('Mike', 'admin@test.com', 'pass'),
+           text='Тестовый текст, превышающий пятнадцать символов на любом языке.',
+           group=cls.group,
+            )
 
     def setUp(self):
         self.guest_client = Client()
-        self.user = get_user_model().objects.create_user(username='Mike')
+        self.user = get_user_model().objects.create_user(username='Slava')
         self.authorized_client = Client()
         self.authorized_client.force_login(self.user)
 
@@ -54,3 +61,29 @@ class PostUrlTests(TestCase):
     def test_new_url_redirect_anonymous_on_auth_login(self):
         response = self.guest_client.get('/new/', follow=True)
         self.assertRedirects(response, '/auth/login/?next=/new/')
+
+    def test_profile_at_desired_location(self):
+        username = self.user.username
+        response = self.authorized_client.get(f'/{username}/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_profile_404_for_missed_username(self):
+        response = self.authorized_client.get('/Ja/')
+        self.assertEqual(response.status_code, 404)
+
+    def test_post_view_at_desired_location(self):
+        post = PostUrlTests.post
+        post_id = post.id
+        username = post.author.username
+        response = self.authorized_client.get(f'/{username}/{post_id}/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_post_view_404_for_wrong_author(self):
+        post = PostUrlTests.post
+        post_id = post.id
+        username = post.author.username
+        response = self.authorized_client.get(f'/{username}wrong/{post_id}/')
+        self.assertEqual(response.status_code, 404)
+
+
+
