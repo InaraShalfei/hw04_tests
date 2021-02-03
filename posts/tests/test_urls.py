@@ -99,9 +99,11 @@ class PostUrlTests(TestCase):
         response = self.authorized_client.get(f'/{username}/{post_id}/edit/')
         self.assertRedirects(response, f'/{username}/{post_id}/')
 
-
-
-
-
-
-
+    def test_post_edit_at_desired_location_for_post_author(self):
+        post = PostUrlTests.post
+        post_id = post.id
+        username = post.author.username
+        author_client = Client()
+        author_client.force_login(post.author)
+        response = author_client.get(f'/{username}/{post_id}/edit/')
+        self.assertEqual(response.status_code, 200)
