@@ -122,12 +122,21 @@ class PostPagesTests(TestCase):
         self.assertEqual(response.context.get('username'), user)
         self.assertEqual(response.context.get('paginator').count, 15)
 
-
     def test_profile_first_page_has_10_records(self):
         post = PostPagesTests.post
         user = post.author
         response = self.authorized_client.get(reverse('profile', kwargs={'username': user}))
         self.assertEqual(len(response.context.get('page').object_list), 10)
+
+    def test_post_view_page_context(self):
+        post = PostPagesTests.post
+        user = post.author
+        post_id = post.id
+        response = self.authorized_client.get(reverse('post', kwargs={'username': user, 'post_id': post_id}))
+        self.assertEqual(response.context.get('username'), user)
+        self.assertEqual(response.context.get('post').id, post.id)
+        self.assertEqual(response.context.get('posts_count'), 15)
+
 
 
 
