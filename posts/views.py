@@ -14,7 +14,7 @@ def index(request):
     paginator = Paginator(post_list, 10)
     page_number = request.GET.get("page")
     page = paginator.get_page(page_number)
-    return render(request, "index.html", {"page": page})
+    return render(request, "index.html", {"page": page, "paginator": paginator})
 
 
 def group_posts(request, slug):
@@ -23,7 +23,7 @@ def group_posts(request, slug):
     paginator = Paginator(posts, 10)
     page_number = request.GET.get("page")
     page = paginator.get_page(page_number)
-    return render(request, "group.html", {"group": group, "posts": posts, "page": page})
+    return render(request, "group.html", {"group": group, "posts": posts, "page": page, "paginator": paginator})
 
 
 def profile(request, username):
@@ -32,14 +32,14 @@ def profile(request, username):
     paginator = Paginator(posts, 10)
     page_number = request.GET.get("page")
     page = paginator.get_page(page_number)
-    return render(request, "profile.html", {"username": username, "posts": posts, "page": page})
+    return render(request, "profile.html", {"username": user, "posts": posts, "page": page, "paginator": paginator})
 
 
 def post_view(request, username, post_id):
     user = get_object_or_404(User, username=username)
     post = get_object_or_404(Post, id=post_id, author=user)
     posts_count = Post.objects.filter(author=user).count()
-    return render(request, "post.html", {"username": username, "post": post, "posts_count": posts_count})
+    return render(request, "post.html", {"username": user, "post": post, "posts_count": posts_count})
 
 
 def post_edit(request, username, post_id):
