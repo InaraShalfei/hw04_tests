@@ -10,7 +10,8 @@ class PostModelTest(TestCase):
     def setUpClass(cls):
         super().setUpClass()
         Post.objects.create(
-            author=User.objects.create_user('Mike', 'admin@test.com', 'pass'),
+            author=User.objects.create_user('Mike',
+                                            'admin@test.com', 'pass'),
             text='Тестовый текст, превышающий пятнадцать символов на любом языке.',
             group=Group.objects.create(title='Bash', slug='bash/', description='bash group'),
         )
