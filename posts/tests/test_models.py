@@ -13,7 +13,7 @@ class PostModelTest(TestCase):
             author=User.objects.create_user('Mike',
                                             'admin@test.com', 'pass'),
             text='Тестовый текст, превышающий пятнадцать символов на любом языке.',
-            group=Group.objects.create(title='Bash', slug='bash/', description='bash group'),
+            group=Group.objects.create(title='Bash', slug='bash', description='bash group'),
         )
         user = User.objects.get(username='Mike')
 
