@@ -23,7 +23,8 @@ def group_posts(request, slug):
     paginator = Paginator(posts, 10)
     page_number = request.GET.get("page")
     page = paginator.get_page(page_number)
-    return render(request, "group.html", {"group": group, "posts": posts, "page": page, "paginator": paginator})
+    return render(request, "group.html", {"group": group,
+                                          "posts": posts, "page": page, "paginator": paginator})
 
 
 def profile(request, username):
@@ -32,14 +33,16 @@ def profile(request, username):
     paginator = Paginator(posts, 10)
     page_number = request.GET.get("page")
     page = paginator.get_page(page_number)
-    return render(request, "profile.html", {"username": user, "page": page, "paginator": paginator})
+    return render(request, "profile.html", {"username": user,
+                                            "page": page, "paginator": paginator})
 
 
 def post_view(request, username, post_id):
     user = get_object_or_404(User, username=username)
     post = get_object_or_404(Post, id=post_id, author=user)
     posts_count = Post.objects.filter(author=user).count()
-    return render(request, "post.html", {"username": user, "post": post, "posts_count": posts_count})
+    return render(request, "post.html", {"username": user,
+                                         "post": post, "posts_count": posts_count})
 
 
 def post_edit(request, username, post_id):
@@ -52,9 +55,11 @@ def post_edit(request, username, post_id):
         if form.is_valid():
             form.save()
             return redirect("post", username=username, post_id=post_id)
-        return render(request, "new.html", {"username": username, "post": post, "form": form})
+        return render(request, "new.html", {"username": username,
+                                            "post": post, "form": form})
     form = PostForm(instance=post)
-    return render(request, "new.html", {"username": username, "post": post, "form": form})
+    return render(request, "new.html", {"username": username,
+                                        "post": post, "form": form})
 
 
 @login_required
