@@ -35,7 +35,7 @@ class NewPostFormTest(TestCase):
         self.assertRedirects(response, '/')
         self.assertEqual(Post.objects.count(), posts_count + 1)
 
-    def test_post_edit_form_create(self):
+    def test_post_edit_form(self):
         post = Post.objects.create(
             author=self.user,
             text='Старый текст.',
