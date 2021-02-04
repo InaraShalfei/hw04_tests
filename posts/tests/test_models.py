@@ -9,11 +9,12 @@ class PostModelTest(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.group = Group.objects.create(title='Bash', slug='bash', description='bash group')
         Post.objects.create(
             author=User.objects.create_user('Mike',
                                             'admin@test.com', 'pass'),
             text='Тестовый текст, превышающий пятнадцать символов на любом языке.',
-            group=Group.objects.create(title='Bash', slug='bash', description='bash group'),
+            group=cls.group,
         )
         user = User.objects.get(username='Mike')
 
@@ -49,7 +50,7 @@ class PostModelTest(TestCase):
         self.assertEqual(max_length_text, str(post))
 
 
-class GroupModelTest(TestCase):
+class PostModelTest(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -61,7 +62,7 @@ class GroupModelTest(TestCase):
         cls.group = Group.objects.get(slug='vsem-privet')
 
     def test_verbose_name(self):
-        group = GroupModelTest.group
+        group = PostModelTest.group
         field_verboses = {
             'description': 'Описание группы',
             'slug': 'Адрес группы',
@@ -73,7 +74,7 @@ class GroupModelTest(TestCase):
                     group._meta.get_field(value).verbose_name, expected)
 
     def test_help_text(self):
-        group = GroupModelTest.group
+        group = PostModelTest.group
         field_help_texts = {
             'description': 'Дать описание группе',
             'slug': 'Указать адрес для страницы',
@@ -84,6 +85,6 @@ class GroupModelTest(TestCase):
                 self.assertEqual(group._meta.get_field(value).help_text, expected)
 
     def group_str_method(self):
-        group = GroupModelTest.group
-        expected_name = group.__str__()
+        group = PostModelTest.group
+        expected_name = "Bash"
         self.assertEqual(expected_name, str(group))
