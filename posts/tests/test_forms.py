@@ -32,7 +32,7 @@ class NewPostFormTest(TestCase):
             data=form_data,
             follow=True
         )
-        self.assertRedirects(response, '/')
+        self.assertRedirects(response, reverse('index'))
         self.assertEqual(Post.objects.count(), posts_count + 1)
 
     def test_post_edit_form(self):
@@ -50,6 +50,7 @@ class NewPostFormTest(TestCase):
             follow=True
         )
         changed_post = Post.objects.get(id=post.id)
-        self.assertRedirects(response, f'/{self.user.username}/{post.id}/')
+        self.assertRedirects(response, reverse('post',
+                                               kwargs={"username": self.user.username, "post_id": post.id}))
         self.assertEqual(changed_post.text, 'Новый текст')
         self.assertEqual(Post.objects.count(), posts_count)
