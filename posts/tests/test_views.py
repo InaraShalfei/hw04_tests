@@ -34,7 +34,7 @@ class PostPagesTests(TestCase):
                 text=f'Текст{i}',
                 group=cls.group,
             )
-            cls.post.pub_date -= datetime.timedelta(minutes=20-i)
+            cls.post.pub_date -= datetime.timedelta(minutes=20 - i)
             cls.post.save()
 
     def setUp(self):
