@@ -26,14 +26,16 @@ class NewPostFormTest(TestCase):
     def test_new_post_page_create(self):
         posts_count = Post.objects.count()
         form_data = {'group': NewPostFormTest.group.id,
-                     'text': 'Текст'}
+                     'text': 'Текст, который мы заслужили'}
         response = self.authorized_client.post(
             reverse('new_post'),
             data=form_data,
-            follow=True
+            follow=True,
         )
+        latest_post = response.context.get('page')[0]
         self.assertRedirects(response, reverse('index'))
         self.assertEqual(Post.objects.count(), posts_count + 1)
+        self.assertEqual(latest_post.text, 'Текст, который мы заслужили')
 
     def test_post_edit_form(self):
         post = Post.objects.create(
