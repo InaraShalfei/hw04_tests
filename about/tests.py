@@ -14,7 +14,7 @@ class StaticViewsTests(TestCase):
 
     def test_about_author_page_uses_correct_template(self):
         response = self.guest_client.get(self.about_url)
-        self.assertTemplateUsed(response, 'about/author.html')
+        self.assertTemplateUsed(response, 'about/about.html')
 
     def test_about_tech_page_accessible_for_user(self):
 
@@ -23,4 +23,4 @@ class StaticViewsTests(TestCase):
 
     def test_about_tech_page_uses_correct_template(self):
         response = self.guest_client.get(self.tech_url)
-        self.assertTemplateUsed(response, 'about/tech.html')
+        self.assertTemplateUsed(response, 'about/about.html')
