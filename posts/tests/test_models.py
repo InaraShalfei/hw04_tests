@@ -9,16 +9,16 @@ class PostModelTest(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.group = Group.objects.create(title='Bash', slug='bash', description='bash group')
+        cls.group = Group.objects.create(title='Bash',
+                                         slug='bash', description='bash group')
+        cls.user = User.objects.create_user('Mike', 'admin@test.com', 'pass')
         Post.objects.create(
-            author=User.objects.create_user('Mike',
-                                            'admin@test.com', 'pass'),
+            author=cls.user,
             text='Тестовый текст, превышающий пятнадцать символов на любом языке.',
             group=cls.group,
         )
-        user = User.objects.get(username='Mike')
 
-        cls.post = Post.objects.get(author=user)
+        cls.post = Post.objects.get(author=cls.user)
 
     def test_verbose_name(self):
         post = PostModelTest.post
