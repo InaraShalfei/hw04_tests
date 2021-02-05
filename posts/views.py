@@ -10,7 +10,7 @@ User = get_user_model()
 
 
 def index(request):
-    post_list = Post.objects.order_by('-id')
+    post_list = Post.objects.order_by('-pub_date')
     paginator = Paginator(post_list, 10)
     page_number = request.GET.get("page")
     page = paginator.get_page(page_number)
