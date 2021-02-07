@@ -54,6 +54,7 @@ class NewPostFormTest(TestCase):
         )
         changed_post = Post.objects.get(id=post.id)
         self.assertRedirects(response, reverse('post',
-                                               kwargs={"username": self.user.username, "post_id": post.id}))
+                                               kwargs={"username": self.user.username,
+                                                       "post_id": post.id}))
         self.assertEqual(changed_post.text, 'Новый текст')
         self.assertEqual(Post.objects.count(), posts_count)
