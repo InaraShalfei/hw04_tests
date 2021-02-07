@@ -138,7 +138,6 @@ class PostPagesTests(TestCase):
         response = self.authorized_client.get(reverse('post', kwargs={'username': user, 'post_id': post_id}))
         self.assertEqual(response.context.get('username'), user)
         self.assertEqual(response.context.get('post').id, post.id)
-        self.assertEqual(response.context.get('posts_count'), 15)
 
     def test_post_edit_page_context(self):
         post = Post.objects.create(
