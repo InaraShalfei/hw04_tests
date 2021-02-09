@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
 
@@ -118,3 +119,10 @@ class PostUrlTests(TestCase):
         reverse_name = f'/{username}/{post_id}/edit/'
         response = author_client.get(reverse_name)
         self.assertTemplateUsed(response, template)
+
+    def test_return_404_if_page_not_found(self):
+        post = PostUrlTests.post
+        username = post.author.username
+        response = self.authorized_client.get(f'/{username}wrong/')
+        self.assertEqual(response.status_code, 404)
+        self.assertTemplateUsed(response, 'misc/404.html')
