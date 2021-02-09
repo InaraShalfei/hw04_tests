@@ -3,37 +3,34 @@
 {% block header %}{% endblock %}
 {% block content %}
 <main role="main" class="container">
-    <div class="row">
-            <div class="col-md-3 mb-3 mt-1">
-                    <div class="card">
-                            <div class="card-body">
-                                    <div class="h2">
-                                        <!-- Имя автора -->
-                                        Автор:{{ author.get_full_name }}
-                                    </div>
-                                    <div class="h3 text-muted">
-                                         <!-- username автора -->
-                                        {{ author.username }}
-                                    </div>
-                            </div>
-                            <ul class="list-group list-group-flush">
-                                    <li class="list-group-item">
-                                            <div class="h6 text-muted">
-                                            Подписчиков: XXX <br />
-                                            Подписан: XXX
-                                            </div>
-                                    </li>
-                                    <li class="list-group-item">
-                                            <div class="h6 text-muted">
-                                                <!-- Количество записей -->
-                                                Записей: {{ author.posts.count }}
-                                            </div>
-                                    </li>
-                            </ul>
-                    </div>
+    <div class="card">
+        <div class="card-body">
+            <div class="h2">
+                <!-- Имя автора -->
+                Автор:{{ author.get_full_name }}
             </div>
+            <div class="h3 text-muted">
+                <!-- username автора -->
+                {{ author.username }}
+            </div>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                <div class="h6 text-muted">
+                    Подписчиков: XXX <br/>
+                    Подписан: XXX
+                </div>
+            </li>
+            <li class="list-group-item">
+                <div class="h6 text-muted">
+                    <!-- Количество записей -->
+                    Записей: {{ author.posts.count }}
+                </div>
+            </li>
+        </ul>
+    </div>
 
-            <div class="col-md-9">
+    <div class="col-md-9">
 
                 <!-- Начало блока с отдельным постом -->
                     <div class="card mb-3 mt-1 shadow-sm">
@@ -60,5 +57,6 @@
                     </div>
                  </div>
     </div>
+
 </main>
 {% endblock %}
