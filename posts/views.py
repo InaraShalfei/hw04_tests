@@ -47,7 +47,7 @@ def post_edit(request, username, post_id):
     if request.user.username != username:
         return redirect("post", username=username, post_id=post_id)
     post = get_object_or_404(Post, id=post_id, author__username=username)
-    if request.method == 'POST':
+    if request.method == "POST":
         form = PostForm(request.POST or None, instance=post)
         if form.is_valid():
             form.save()
@@ -59,7 +59,7 @@ def post_edit(request, username, post_id):
 
 @login_required
 def new_post(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = PostForm(request.POST or None)
         if form.is_valid():
             post = form.save(commit=False)
