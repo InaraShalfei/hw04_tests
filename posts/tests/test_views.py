@@ -1,9 +1,8 @@
+import datetime
+from django import forms
 from django.contrib.auth import get_user_model
 from django.test import Client, TestCase
 from django.urls import reverse
-from django import forms
-import datetime
-
 
 from posts.forms import PostForm
 from posts.models import Group, Post
