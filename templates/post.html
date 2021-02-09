@@ -2,33 +2,13 @@
 {% block title %}Профиль пользователя{% endblock %}
 {% block header %}{% endblock %}
 {% block content %}
+
 <main role="main" class="container">
-    <div class="card">
-        <div class="card-body">
-            <div class="h2">
-                <!-- Имя автора -->
-                Автор:{{ author.get_full_name }}
-            </div>
-            <div class="h3 text-muted">
-                <!-- username автора -->
-                {{ author.username }}
-            </div>
+    <div class="row">
+
+            {% include "includes/author_card.html" %}
         </div>
-        <ul class="list-group list-group-flush">
-            <li class="list-group-item">
-                <div class="h6 text-muted">
-                    Подписчиков: XXX <br/>
-                    Подписан: XXX
-                </div>
-            </li>
-            <li class="list-group-item">
-                <div class="h6 text-muted">
-                    <!-- Количество записей -->
-                    Записей: {{ author.posts.count }}
-                </div>
-            </li>
-        </ul>
-    </div>
+
 
     <div class="col-md-9">
 
