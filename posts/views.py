@@ -43,11 +43,12 @@ def post_view(request, username, post_id):
                                          "post": post})
 
 
+@login_required
 def post_edit(request, username, post_id):
     if request.user.username != username:
         return redirect("post", username=username, post_id=post_id)
     post = get_object_or_404(Post, id=post_id, author__username=username)
-    form = PostForm(request.POST or None, instance=post)
+    form = PostForm(request.POST or None, files=request.FILES or None, instance=post)
     if request.method == "POST":
         if form.is_valid():
             form.save()
@@ -58,7 +59,7 @@ def post_edit(request, username, post_id):
 
 @login_required
 def new_post(request):
-    form = PostForm(request.POST or None)
+    form = PostForm(request.POST or None,  files=request.FILES or None)
     if request.method == "POST":
         if form.is_valid():
             post = form.save(commit=False)
