@@ -19,7 +19,7 @@
             <hr>
             <div class="card-body">
                 <form
-                        method="POST"
+                        method="POST" enctype="multipart/form-data"
                         {% if request.user.username == username %}
                              action="{% url 'post_edit' username=username post_id=post.id %}"
                         {% else %}
