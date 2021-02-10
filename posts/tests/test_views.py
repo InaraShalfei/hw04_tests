@@ -1,4 +1,8 @@
 import datetime
+import shutil
+import tempfile
+
+from django.conf import settings
 from django import forms
 from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -15,6 +19,7 @@ class PostPagesTests(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        settings.MEDIA_ROOT = tempfile.mkdtemp(dir=settings.BASE_DIR)
 
         cls.group = Group.objects.create(
             title='Vsem privet',
@@ -50,6 +55,12 @@ class PostPagesTests(TestCase):
             )
             cls.post.pub_date -= datetime.timedelta(minutes=20 - i)
             cls.post.save()
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(settings.MEDIA_ROOT, ignore_errors=True)
+        super().tearDownClass()
+
 
     def setUp(self):
         self.guest_client = Client()
