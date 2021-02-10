@@ -42,7 +42,7 @@ def post_view(request, username, post_id):
     form = CommentForm()
     return render(request, "post.html", {"author": user,
                                          "post": post,
-                                         "form": form,})
+                                         "form": form})
 
 
 def post_edit(request, username, post_id):
@@ -70,13 +70,19 @@ def new_post(request):
     return render(request, "new.html", {"form": form})
 
 
-def add_comment(request):
+def add_comment(request, username, post_id):
     form = CommentForm(request.POST or None)
+    post = get_object_or_404(Post, id=post_id, author__username=username)
     if request.method == "POST":
         if form.is_valid():
-            comment = form.save()
-            return redirect("post", username=comment.author.username, post_id=comment.post.id)
-    return
+            comment = form.save(commit=False)
+            comment.author = request.user
+            comment.post = post
+            form.save()
+            return redirect("add_comment", username=username, post_id=post.id)
+    return render(request, "post.html", {"author": post.author,
+                                         "post": post,
+                                         "form": form})
 
 
 
