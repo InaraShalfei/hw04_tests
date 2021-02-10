@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 
 from .models import Post, Group
-from .forms import PostForm
+from .forms import CommentForm, PostForm
 
 User = get_user_model()
 
@@ -39,8 +39,10 @@ def profile(request, username):
 def post_view(request, username, post_id):
     user = get_object_or_404(User, username=username)
     post = get_object_or_404(Post, id=post_id, author=user)
+    form = CommentForm()
     return render(request, "post.html", {"author": user,
-                                         "post": post})
+                                         "post": post,
+                                         "form": form,})
 
 
 def post_edit(request, username, post_id):
@@ -68,6 +70,20 @@ def new_post(request):
     return render(request, "new.html", {"form": form})
 
 
+def add_comment(request):
+    form = CommentForm(request.POST or None)
+    if request.method == "POST":
+        if form.is_valid():
+            comment = form.save()
+            return redirect("post", username=comment.author.username, post_id=comment.post.id)
+    return
+
+
+
+
+
+
+
 def page_not_found(request, exception):
     return render(
         request,
@@ -79,4 +95,3 @@ def page_not_found(request, exception):
 
 def server_error(request):
     return render(request, "misc/500.html", status=500)
-
