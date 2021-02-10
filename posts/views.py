@@ -43,7 +43,6 @@ def post_view(request, username, post_id):
                                          "post": post})
 
 
-@login_required
 def post_edit(request, username, post_id):
     if request.user.username != username:
         return redirect("post", username=username, post_id=post_id)
