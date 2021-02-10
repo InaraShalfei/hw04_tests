@@ -26,6 +26,7 @@ class PostModelTest(TestCase):
             'text': 'Текст поста',
             'author': 'Автор поста',
             'group': 'Группа поста',
+            'image': 'Изображение',
         }
         for value, expected in field_verboses.items():
             with self.subTest(value=value):
