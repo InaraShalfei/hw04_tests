@@ -17,7 +17,7 @@ class NewPostFormTest(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        settings.MEDIA_ROOT = tempfile.mkdtemp(dir=settings.BASE_DIR)
+        settings.MEDIA_ROOT = tempfile.mkdtemp(prefix='newpost', dir=settings.BASE_DIR)
 
         cls.user = User.objects.create_user('Dike', 'admin@test.com', 'pass')
 

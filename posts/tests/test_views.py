@@ -19,7 +19,7 @@ class PostPagesTests(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        settings.MEDIA_ROOT = tempfile.mkdtemp(dir=settings.BASE_DIR)
+        settings.MEDIA_ROOT = tempfile.mkdtemp(prefix='pages', dir=settings.BASE_DIR)
 
         cls.group = Group.objects.create(
             title='Vsem privet',
@@ -60,7 +60,6 @@ class PostPagesTests(TestCase):
     def tearDownClass(cls):
         shutil.rmtree(settings.MEDIA_ROOT, ignore_errors=True)
         super().tearDownClass()
-
 
     def setUp(self):
         self.guest_client = Client()
