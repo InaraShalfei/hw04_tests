@@ -66,6 +66,7 @@ class NewPostFormTest(TestCase):
         self.assertEqual(Post.objects.count(), posts_count + 1)
         self.assertEqual(latest_post.text, 'Текст, который мы заслужили')
         self.assertEqual(latest_post.group, NewPostFormTest.group)
+        self.assertIsNotNone(latest_post.image.url)
 
     def test_post_edit_form(self):
         post = Post.objects.create(

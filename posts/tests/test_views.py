@@ -33,25 +33,11 @@ class PostPagesTests(TestCase):
             description='Gruppa chtoby govorit privet_2',
         )
         cls.user = User.objects.create_user('Dike', 'admin@test.com', 'pass')
-        small_gif = (
-            b'\x47\x49\x46\x38\x39\x61\x02\x00'
-            b'\x01\x00\x80\x00\x00\x00\x00\x00'
-            b'\xFF\xFF\xFF\x21\xF9\x04\x00\x00'
-            b'\x00\x00\x00\x2C\x00\x00\x00\x00'
-            b'\x02\x00\x01\x00\x00\x02\x02\x0C'
-            b'\x0A\x00\x3B'
-        )
-        uploaded = SimpleUploadedFile(
-            name='small.gif',
-            content=small_gif,
-            content_type='image/gif'
-        )
         for i in range(15):
             cls.post = Post.objects.create(
                 author=cls.user,
                 text=f'Текст{i}',
                 group=cls.group,
-                image=uploaded,
             )
             cls.post.pub_date -= datetime.timedelta(minutes=20 - i)
             cls.post.save()
@@ -102,8 +88,6 @@ class PostPagesTests(TestCase):
         last_post_text = last_post.text
         self.assertEqual(first_post_text, 'Текст14')
         self.assertEqual(last_post_text, 'Текст5')
-        for post in page:
-            self.assertIsNotNone(post.image)
 
     def test_homepage_first_page_has_10_records(self):
         response = self.authorized_client.get(reverse('index'))
@@ -118,8 +102,6 @@ class PostPagesTests(TestCase):
         self.assertEqual(response.context.get('group').title, 'Vsem privet')
         self.assertEqual(response.context.get('group').description, 'Gruppa chtoby govorit privet')
         self.assertEqual(response.context.get('group').slug, 'test-slug')
-        for post in response.context.get('page'):
-            self.assertIsNotNone(post.image)
 
     def test_group_first_page_has_10_records(self):
         response = self.authorized_client.get(reverse('group', kwargs={'slug': 'test-slug'}))
@@ -153,8 +135,6 @@ class PostPagesTests(TestCase):
         response = self.authorized_client.get(reverse('profile', kwargs={'username': user}))
         self.assertEqual(response.context.get('author'), user)
         self.assertEqual(response.context.get('paginator').count, 15)
-        for post in response.context.get('page'):
-            self.assertIsNotNone(post.image)
 
     def test_profile_first_page_has_10_records(self):
         post = PostPagesTests.post
@@ -169,7 +149,6 @@ class PostPagesTests(TestCase):
         response = self.authorized_client.get(reverse('post', kwargs={'username': user, 'post_id': post_id}))
         self.assertEqual(response.context.get('author'), user)
         self.assertEqual(response.context.get('post').id, post.id)
-        self.assertIsNotNone(post.image)
 
     def test_post_edit_page_context(self):
         post = Post.objects.create(
@@ -185,3 +164,61 @@ class PostPagesTests(TestCase):
         self.assertEqual(response.context.get('username'), username)
         self.assertEqual(response.context.get('post').id, post.id)
         self.assertIsInstance(response.context.get('form'), PostForm)
+
+    def test_image_in_context(self):
+        small_gif = (
+            b'\x47\x49\x46\x38\x39\x61\x02\x00'
+            b'\x01\x00\x80\x00\x00\x00\x00\x00'
+            b'\xFF\xFF\xFF\x21\xF9\x04\x00\x00'
+            b'\x00\x00\x00\x2C\x00\x00\x00\x00'
+            b'\x02\x00\x01\x00\x00\x02\x02\x0C'
+            b'\x0A\x00\x3B'
+        )
+        uploaded = SimpleUploadedFile(
+            name='small.gif',
+            content=small_gif,
+            content_type='image/gif'
+        )
+        post = Post.objects.create(
+                author=PostPagesTests.user,
+                text='Текст',
+                group=PostPagesTests.group,
+                image=uploaded,
+            )
+        user = post.author
+        templates_pages_names = {
+            'index.html': reverse('index'),
+            'group.html': reverse('group', kwargs={'slug': 'test-slug'}),
+            'profile.html': reverse('profile', kwargs={'username': user}),
+        }
+        for template, reverse_name in templates_pages_names.items():
+            with self.subTest(reverse_name=reverse_name):
+                response = self.authorized_client.get(reverse_name)
+                latest_post = response.context.get('page')[0]
+                self.assertIsNotNone(latest_post.image.url, template)
+
+    def test_image_in_post_view_context(self):
+        small_gif = (
+            b'\x47\x49\x46\x38\x39\x61\x02\x00'
+            b'\x01\x00\x80\x00\x00\x00\x00\x00'
+            b'\xFF\xFF\xFF\x21\xF9\x04\x00\x00'
+            b'\x00\x00\x00\x2C\x00\x00\x00\x00'
+            b'\x02\x00\x01\x00\x00\x02\x02\x0C'
+            b'\x0A\x00\x3B'
+        )
+        uploaded = SimpleUploadedFile(
+            name='small.gif',
+            content=small_gif,
+            content_type='image/gif'
+        )
+        post = Post.objects.create(
+            author=PostPagesTests.user,
+            text='Текст',
+            group=PostPagesTests.group,
+            image=uploaded,
+        )
+        user = post.author
+        post_id = post.id
+        response = self.authorized_client.get(reverse('post', kwargs={'username': user, 'post_id': post_id}))
+        post = response.context.get('post')
+        self.assertIsNotNone(post.image.url)
