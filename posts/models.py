@@ -25,7 +25,7 @@ class Post(models.Model):
     text = models.TextField("Текст поста",
                             help_text="Написать текст поста")
     pub_date = models.DateTimeField("Дата публикации",
-                                    auto_now_add=True)
+                                    auto_now_add=True, db_index=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE,
                                related_name="posts",
                                verbose_name="Автор поста",

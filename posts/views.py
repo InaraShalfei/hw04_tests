@@ -1,7 +1,7 @@
-from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.shortcuts import render, get_object_or_404, redirect
 
 from .models import Post, Group
 from .forms import CommentForm, PostForm
@@ -83,11 +83,6 @@ def add_comment(request, username, post_id):
     return render(request, "post.html", {"author": post.author,
                                          "post": post,
                                          "form": form})
-
-
-
-
-
 
 
 def page_not_found(request, exception):
