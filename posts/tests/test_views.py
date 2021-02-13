@@ -5,6 +5,7 @@ import tempfile
 from django.conf import settings
 from django import forms
 from django.contrib.auth import get_user_model
+from django.core.cache import cache
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client, TestCase
 from django.urls import reverse
@@ -222,3 +223,18 @@ class PostPagesTests(TestCase):
         response = self.authorized_client.get(reverse('post', kwargs={'username': user, 'post_id': post_id}))
         post = response.context.get('post')
         self.assertIsNotNone(post.image.url)
+
+    def test_cache_on_homepage(self):
+        new_post_text = 'Text for cached post'
+        response = self.authorized_client.get(reverse('index'))
+        self.assertNotContains(response, new_post_text)
+        Post.objects.create(
+            author=self.user,
+            text=new_post_text,
+            group=PostPagesTests.group,
+        )
+        response = self.authorized_client.get(reverse('index'))
+        self.assertNotContains(response, new_post_text)
+        cache.clear()
+        response = self.authorized_client.get(reverse('index'))
+        self.assertContains(response, new_post_text)
