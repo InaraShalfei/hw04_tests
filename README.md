@@ -1,1 +1,1 @@
-# hw04_tests
+Покрытие тестами проекта Yatube (тренировка Django Unittests)
